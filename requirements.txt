@@ -2,4 +2,4 @@ django
 gunicorn
 django-heroku
 djangorestframework
-redis-py
+redis

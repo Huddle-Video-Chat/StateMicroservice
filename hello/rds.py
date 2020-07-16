@@ -8,7 +8,10 @@ import redis
 #             port=18429
 #         )
 
-rc = redis.from_url(os.environ.get("REDIS_URL"))
+if os.environ.get("REDIS_URL"):
+    rc = redis.from_url(os.environ.get("REDIS_URL"))
+else: 
+    rc = redis.Redis(host='localhost', port=6379)
 
 def get_list(key):
     return rc.lrange(key, 0, -1)

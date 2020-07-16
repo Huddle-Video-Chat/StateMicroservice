@@ -2,7 +2,10 @@ import redis
 
 class RedisClient(redis.Redis):
     def __init__(self):
-        super(self.__class__, self).__init__(host='localhost', port=6379)
+        super(self.__class__, self).__init__(
+            host='redis://h:pf1c13f2a465ee1822060f5118972cea576ebb4eb5f7f7e4f310446f7dc366232@ec2-23-21-1-196.compute-1.amazonaws.com',
+            port=18429
+        )
 
     def get_list(self, key):
         return super(self.__class__, self).lrange(key, 0, -1)

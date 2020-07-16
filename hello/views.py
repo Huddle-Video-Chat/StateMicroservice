@@ -116,5 +116,5 @@ def getStateJson(id, user_id):
 
 @api_view(['DELETE'])
 def clear(request):
-    rds.rc.reset()
+    rds.reset()
     return Response("Cleared database")

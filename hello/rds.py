@@ -1,24 +1,25 @@
+import os
 import redis
 
-class RedisClient(redis.Redis):
-    def __init__(self):
-        super(self.__class__, self).__init__(
-            host='redis://h:pf1c13f2a465ee1822060f5118972cea576ebb4eb5f7f7e4f310446f7dc366232@ec2-23-21-1-196.compute-1.amazonaws.com',
-            port=18429
-        )
+# class RedisClient(redis.Redis):
+#     def __init__(self):
+#         super(self.__class__, self).__init__(
+#             host='redis://h:pf1c13f2a465ee1822060f5118972cea576ebb4eb5f7f7e4f310446f7dc366232@ec2-23-21-1-196.compute-1.amazonaws.com',
+#             port=18429
+#         )
 
-    def get_list(self, key):
-        return super(self.__class__, self).lrange(key, 0, -1)
+rc = redis.from_url(os.environ.get("REDIS_URL"))
 
-    def delete_all_in_list(self, key):
-        for _id in self.get_list(key):
-            super(self.__class__, self).delete(id)
+def get_list(self, key):
+    return rc.lrange(key, 0, -1)
 
-    def reset(self):
-        super(self.__class__, self).flushdb()
-        super(self.__class__, self).set(Room.get_room_counter_key(), 0)
+def delete_all_in_list(self, key):
+    for _id in self.get_list(key):
+        rc.delete(id)
 
-rc = RedisClient()
+def reset(self):
+    rc.flushdb()
+    rc.set(Room.get_room_counter_key(), 0)
 
 class Room():
     def get_key(id):

@@ -10,14 +10,14 @@ import redis
 
 rc = redis.from_url(os.environ.get("REDIS_URL"))
 
-def get_list(self, key):
+def get_list(key):
     return rc.lrange(key, 0, -1)
 
-def delete_all_in_list(self, key):
+def delete_all_in_list(key):
     for _id in self.get_list(key):
         rc.delete(id)
 
-def reset(self):
+def reset():
     rc.flushdb()
     rc.set(Room.get_room_counter_key(), 0)
 

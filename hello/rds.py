@@ -91,13 +91,13 @@ class Room():
                 Room.delete_user(id, user_id)
 
     def list():
-        return rc.get_list(Room.get_room_list_key())
+        return get_list(Room.get_room_list_key())
 
     def list_huddles(id):
-        return rc.get_list(Room.get_huddle_list_key(id))
+        return get_list(Room.get_huddle_list_key(id))
 
     def list_users(id):
-        return rc.get_list(Room.get_user_list_key(id))
+        return get_list(Room.get_user_list_key(id))
 
     def get_next_id(id, key=None):
         if not key:
@@ -120,7 +120,7 @@ class Room():
         return rc.llen(Room.get_huddle_list_key(id))
 
     def get_zeroth_huddle(id):
-        return int(rc.get_list(Room.get_huddle_list_key(id))[0])
+        return int(get_list(Room.get_huddle_list_key(id))[0])
 
 class Huddle():
     def get_key(room_id, id):
@@ -156,7 +156,7 @@ class Huddle():
                 Huddle.delete_user(room_id, id, user_id)
 
     def list_users(room_id, id):
-        return rc.get_list(Huddle.get_user_list_key(room_id, id))
+        return get_list(Huddle.get_user_list_key(room_id, id))
 
     def num_users(room_id, id):
         return rc.llen(Huddle.get_user_list_key(room_id, id))

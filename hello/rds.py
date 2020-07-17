@@ -98,7 +98,7 @@ class Room():
         return get_list(Room.get_user_list_key(id))
 
     def get_next_huddle_id(id):
-        val = int(rc.hget(id, "HUDDLECOUNTER")) + 1
+        val = int(rc.hget(Room.get_key(id), "HUDDLECOUNTER")) + 1
         rc.hmset(id, {key: val})
         return val  
 

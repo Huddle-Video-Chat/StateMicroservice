@@ -64,7 +64,7 @@ class Room():
 
     def add_huddle(id, huddle_data):
         if Room.exists(id):
-            huddle_id = Room.get_next_huddle_id()
+            huddle_id = Room.get_next_huddle_id(id)
             Huddle.create(id, huddle_id, huddle_data) # creates huddle dict
             rc.lpush(Room.get_huddle_list_key(id), huddle_id) # add huddle id to room's huddles list
             return huddle_id

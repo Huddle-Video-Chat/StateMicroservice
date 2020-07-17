@@ -54,9 +54,9 @@ class Room():
 
         return id
 
-    def add_user(id, user_data):
+    def add_user(id, user_id, user_data):
         if Room.exists(id):
-            user_id = Room.get_next_id(Room.get_key(id), key="USERCOUNTER")
+            # user_id = Room.get_next_id(Room.get_key(id), key="USERCOUNTER")
             User.create(id, user_id, user_data) # creates user dict
             rc.lpush(Room.get_user_list_key(id), user_id) # add user id to room's users list
             return user_id

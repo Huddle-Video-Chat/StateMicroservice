@@ -24,11 +24,12 @@ def roomExists(request):
     return Response(r)
 
 @api_view(['POST']) 
-@check_params(['id', 'username', 'first', 'last'])
+@check_params(['id', 'user_id', 'username', 'first', 'last'])
 def joinRoom(request):
     id = helpers.getQueryValue(request, 'id')
     user_data = helpers.getQueryDict(request, keys=['username', 'first', 'last'])
-    user_id = rds.Room.add_user(id, user_data)
+
+    user_id = rds.Room.add_user(id, user_id, user_data)
 
     if rds.Room.num_huddles(id) == 0:
         rds.Room.add_huddle(id, {'id': id})

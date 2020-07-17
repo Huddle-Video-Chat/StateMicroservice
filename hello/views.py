@@ -30,10 +30,10 @@ def joinRoom(request):
     user_data = helpers.getQueryDict(request, keys=['username', 'first', 'last'])
     user_id = helpers.getQueryValue(request, 'user_id')
 
-    # user_id = rds.Room.add_user(id, user_id, user_data)
-
     if not rds.Room.exists(id):
         rds.Room.create(id, {'name': 'default'})
+
+    rds.Room.add_user(id, user_id, user_data)
 
     if rds.Room.num_huddles(id) == 0:
         rds.Room.add_huddle(id, {'id': id})

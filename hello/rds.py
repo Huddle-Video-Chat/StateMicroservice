@@ -99,7 +99,7 @@ class Room():
 
     def get_next_huddle_id(id):
         val = int(rc.hget(Room.get_key(id), "HUDDLECOUNTER")) + 1
-        rc.hmset(id, {"HUDDLECOUNTER": val})
+        rc.hmset(Room.get_key(id), {"HUDDLECOUNTER": val})
         return val  
 
     def num():

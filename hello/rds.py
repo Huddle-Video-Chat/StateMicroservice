@@ -22,35 +22,30 @@ def delete_all_in_list(key):
 
 def reset():
     rc.flushdb()
-    rc.set(Room.get_room_counter_key(), 0)
-
 class Room():
     def get_key(id):
-        return 'ROOM' + str(id)
+        return 'ROOM_' + str(id)
     
     def get_user_list_key(id):
-        return 'LISTROOMUSERS' + str(id)
+        return 'LISTROOMUSERS_' + str(id)
 
     def get_huddle_list_key(id):
-        return 'LISTROOMHUDDLES' + str(id)
+        return 'LISTROOMHUDDLES_' + str(id)
 
     def get_room_list_key():
         return 'LISTROOMS'
 
-    def get_room_counter_key():
-        return 'ROOMCOUNTER'
-
     def exists(id):
         return rc.exists(Room.get_key(id))
 
-    def create(data):
-        id = Room.get_next_id(Room.get_room_counter_key())
+    def create(id, data):
+        # id = Room.get_next_id(Room.get_room_counter_key())
 
         key = Room.get_key(id)
         rc.lpush(Room.get_room_list_key(), id) # adds room id to rooms list
         rc.hmset(key, data) # creates room dict
 
-        rc.hmset(key, {"USERCOUNTER": 0, "HUDDLECOUNTER": 0})
+        rc.hmset(key, {"HUDDLECOUNTER": 0})
 
         return id
 
@@ -69,7 +64,7 @@ class Room():
 
     def add_huddle(id, huddle_data):
         if Room.exists(id):
-            huddle_id = Room.get_next_id(Room.get_key(id), key="HUDDLECOUNTER")
+            huddle_id = Room.get_next_huddle_id()
             Huddle.create(id, huddle_id, huddle_data) # creates huddle dict
             rc.lpush(Room.get_huddle_list_key(id), huddle_id) # add huddle id to room's huddles list
             return huddle_id
@@ -102,16 +97,10 @@ class Room():
     def list_users(id):
         return get_list(Room.get_user_list_key(id))
 
-    def get_next_id(id, key=None):
-        if not key:
-            val = int(rc.get(id)) + 1
-            rc.set(id, val)
-            return val
-        else:
-            print(id, key)
-            val = int(rc.hget(id, key)) + 1
-            rc.hmset(id, {key: val})
-            return val  
+    def get_next_huddle_id(id):
+        val = int(rc.hget(id, "HUDDLECOUNTER")) + 1
+        rc.hmset(id, {key: val})
+        return val  
 
     def num():
         return rc.llen(Room.get_room_list_key())
@@ -127,10 +116,10 @@ class Room():
 
 class Huddle():
     def get_key(room_id, id):
-        return 'HUDDLE' + str(room_id) + "_" + str(id)
+        return 'HUDDLE_' + str(room_id) + "_" + str(id)
 
     def get_user_list_key(room_id, id):
-        return 'LISTHUDDLEUSERS' + str(room_id) + "_" + str(id)
+        return 'LISTHUDDLEUSERS_' + str(room_id) + "_" + str(id)
 
     def exists(room_id, id):
         return rc.exists(Huddle.get_key(room_id, id))
@@ -167,7 +156,7 @@ class Huddle():
     
 class User():
     def get_key(room_id, id):
-        return 'USER' + str(room_id) + "_" + str(id)
+        return 'USER_' + str(room_id) + "_" + str(id)
 
     def exists(room_id, id):
         return rc.exists(User.get_key(room_id, id))

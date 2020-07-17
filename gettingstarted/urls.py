@@ -21,7 +21,7 @@ urlpatterns = [
 
     path('ping', hello.views.ping),
     path('room/state', hello.views.state),
-    path('room/create', hello.views.createRoom),
+    # path('room/create', hello.views.createRoom),
     # path('room/delete', hello.views.deleteRoom),
 
     path('room/exists', hello.views.roomExists),

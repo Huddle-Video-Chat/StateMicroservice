@@ -11,11 +11,11 @@ from . import helpers
 def ping(request):
     return Response("Hello World!")
 
-@api_view(['POST']) 
-@check_params(['name'])
-def createRoom(request):
-    id = rds.Room.create(helpers.getQueryDict(request))
-    return Response({"id": id})
+# @api_view(['POST']) 
+# @check_params(['name'])
+# def createRoom(request):
+#     id = rds.Room.create(helpers.getQueryDict(request))
+#     return Response({"id": id})
 
 @api_view(['GET']) 
 @check_params(['id'])
@@ -28,8 +28,12 @@ def roomExists(request):
 def joinRoom(request):
     id = helpers.getQueryValue(request, 'id')
     user_data = helpers.getQueryDict(request, keys=['username', 'first', 'last'])
+    user_id = helpers.getQueryValue(request, 'user_id')
 
-    user_id = rds.Room.add_user(id, user_id, user_data)
+    # user_id = rds.Room.add_user(id, user_id, user_data)
+
+    if not rds.Room.exists(id):
+        rds.Room.create(id, {})
 
     if rds.Room.num_huddles(id) == 0:
         rds.Room.add_huddle(id, {'id': id})
@@ -102,15 +106,15 @@ def state(request):
 
 def getStateJson(id, user_id):
     response = {
-        "id": int(id),
-        "user_id": int(user_id),
+        "id": id,
+        "user_id": user_id,
         "huddle_id": int(rds.User.get_huddle(id, user_id)),
-        "users": [int(u) for u in rds.Room.list_users(id)],
+        "users": [u for u in rds.Room.list_users(id)],
         "rooms": []
     }
     for i in rds.Room.list_huddles(id):
         i = int(i)
-        users = [int(u) for u in rds.Huddle.list_users(id, i)]
+        users = [u for u in rds.Huddle.list_users(id, i)]
         response['rooms'] += [{"id" : i, "users": users}]
 
     return response

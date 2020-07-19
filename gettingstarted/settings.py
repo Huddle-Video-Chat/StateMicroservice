@@ -60,7 +60,7 @@ CORS_ORIGIN_WHITELIST = [
 ]
 
 CORS_ORIGIN_REGEX_WHITELIST = [
-    r"^https:\/\/video-app-\d+-dev\.twil\.io\/$"
+    r"^https://video-app-\d+-dev\.twil\.io$"
 ]
 
 ROOT_URLCONF = "gettingstarted.urls"

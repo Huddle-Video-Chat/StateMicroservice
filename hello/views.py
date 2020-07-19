@@ -114,7 +114,7 @@ def getStateJson(id, user_id):
     }
     for huddle_id in rds.Room.list_huddles(id):
         huddle_id = int(huddle_id)
-        # users = [u for u in rds.Huddle.list_users(id, huddle_id)]
+        users = [u for u in rds.Huddle.list_users(id, huddle_id)]
 
         for u in rds.Huddle.list_users(id, huddle_id):
             response['users'][u] = huddle_id

@@ -56,7 +56,11 @@ MIDDLEWARE = [
 ]
 
 CORS_ORIGIN_WHITELIST = [
-    "http://localhost:3000", r"^https:\/\/video-app-\d+-dev\.twil\.io\/$"
+    "http://localhost:3000"
+]
+
+CORS_ORIGIN_REGEX_WHITELIST = [
+    r"^https:\/\/video-app-\d+-dev\.twil\.io\/$"
 ]
 
 ROOT_URLCONF = "gettingstarted.urls"

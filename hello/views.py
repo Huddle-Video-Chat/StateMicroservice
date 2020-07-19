@@ -109,7 +109,7 @@ def getStateJson(id, user_id):
         "id": id,
         "user_id": user_id,
         "huddle_id": int(rds.User.get_huddle(id, user_id)),
-        "users": {}, [u for u in rds.Room.list_users(id)],
+        "users": {}, # [u for u in rds.Room.list_users(id)],
         "rooms": []
     }
     for huddle_id in rds.Room.list_huddles(id):

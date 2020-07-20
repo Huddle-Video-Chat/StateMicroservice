@@ -33,6 +33,5 @@ urlpatterns = [
 
     path('huddle/create', hello.views.createHuddle),
 
-
     path('clear', hello.views.clear),
 ]

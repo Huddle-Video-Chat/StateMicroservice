@@ -59,9 +59,9 @@ CORS_ORIGIN_WHITELIST = [
     "http://localhost:3000", "https://video-app-2421-dev.twil.io?passcode=5023002421"
 ]
 
-# CORS_ORIGIN_REGEX_WHITELIST = [
-#     r"^https://\w+\.twil\.io$",
-# ]
+CORS_ORIGIN_REGEX_WHITELIST = [
+    r"^https://\w+\.twil\.io$",
+]
 
 ROOT_URLCONF = "gettingstarted.urls"
 

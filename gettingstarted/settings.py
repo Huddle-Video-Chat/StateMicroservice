@@ -56,7 +56,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ORIGIN_WHITELIST = [
-    "http://localhost:3000", "https://video-app-2421-dev.twil.io?passcode=5023002421"
+    "http://localhost:3000", "*"
 ]
 
 CORS_ORIGIN_REGEX_WHITELIST = [

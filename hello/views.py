@@ -41,6 +41,8 @@ def joinRoom(request):
     huddle_id = rds.Room.get_zeroth_huddle(id)
     rds.Huddle.add_user(id, huddle_id, user_id)
 
+    rds.Room.updateStateCounter(id)
+
     return Response(getStateJson(id, user_id))
 
 @api_view(['DELETE']) 
@@ -62,6 +64,8 @@ def leaveRoom(request):
     if rds.Room.num_users(id) == 0:
         rds.Room.delete(id)
 
+    rds.Room.updateStateCounter(id)
+
     return Response(True)
 
 
@@ -79,6 +83,8 @@ def joinHuddle(request):
     if rds.Huddle.num_users(id, old_huddle_id) == 0:
         rds.Room.delete_huddle(id, old_huddle_id)
 
+    rds.Room.updateStateCounter(id)
+
     return Response(getStateJson(id, user_id))
 
 @api_view(['POST']) 
@@ -95,6 +101,8 @@ def createHuddle(request):
     if rds.Huddle.num_users(id, old_huddle_id) == 0:
         rds.Room.delete_huddle(id, old_huddle_id)
 
+    rds.Room.updateStateCounter(id)
+
     return Response(getStateJson(id, user_id))
 
 @api_view(['GET']) 
@@ -106,6 +114,7 @@ def state(request):
 
 def getStateJson(id, user_id):
     response = {
+        "state_counter": rds.Room.getStateCounter(id)
         "id": id,
         "user_id": user_id,
         "huddle_id": int(rds.User.get_huddle(id, user_id)),

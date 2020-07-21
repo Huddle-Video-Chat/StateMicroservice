@@ -46,8 +46,17 @@ class Room():
         rc.hmset(key, data) # creates room dict
 
         rc.hmset(key, {"HUDDLECOUNTER": 0})
+        rc.hmset(key, {"STATECOUNTER": 0})
 
         return id
+
+    def updateStateCounter(id):
+        val = int(rc.hget(Room.get_key(id), "STATECOUNTER")) + 1
+        rc.hmset(Room.get_key(id), {"STATECOUNTER": val})
+        return val  
+
+    def getStateCounter(id):
+        return int(rc.hget(Room.get_key(id), "STATECOUNTER"))
 
     def add_user(id, user_id, user_data):
         if Room.exists(id):
@@ -55,6 +64,7 @@ class Room():
             User.create(id, user_id, user_data) # creates user dict
             rc.lpush(Room.get_user_list_key(id), user_id) # add user id to room's users list
             return user_id
+            
 
     def delete_user(id, user_id, huddle_id):
         if Room.exists(id):
@@ -62,11 +72,14 @@ class Room():
             User.delete(id, user_id) # delete user dict
             Huddle.delete_user(id, huddle_id, user_id)
 
+
     def add_huddle(id, huddle_data):
         if Room.exists(id):
             huddle_id = Room.get_next_huddle_id(id)
             Huddle.create(id, huddle_id, huddle_data) # creates huddle dict
             rc.lpush(Room.get_huddle_list_key(id), huddle_id) # add huddle id to room's huddles list
+
+
             return huddle_id
 
     def delete_huddle(id, huddle_id):

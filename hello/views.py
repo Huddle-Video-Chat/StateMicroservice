@@ -114,7 +114,7 @@ def state(request):
 
 def getStateJson(id, user_id):
     response = {
-        "state_counter": rds.Room.getStateCounter(id)
+        "state_counter": rds.Room.getStateCounter(id),
         "id": id,
         "user_id": user_id,
         "huddle_id": int(rds.User.get_huddle(id, user_id)),

@@ -27,7 +27,7 @@ SECRET_KEY = "CHANGE_ME!!!! (P.S. the SECRET_KEY environment variable will be us
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["http://localhost:3000", "https://video-app-6833-dev.twil.io/", "https://video-app-2718-dev.twil.io/", "https://video-app-6812-dev.twil.io/"]
+ALLOWED_HOSTS = ["http://localhost:3000", "https://video-app-6833-dev.twil.io/", "https://video-app-2718-dev.twil.io/", "https://video-app-6927-dev.twil.io/"]
 
 
 # Application definition
@@ -56,7 +56,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ORIGIN_WHITELIST = [
-    "http://localhost:3000", "https://video-app-6833-dev.twil.io", "https://video-app-2718-dev.twil.io/", "https://video-app-6812-dev.twil.io/"
+    "http://localhost:3000", "https://video-app-6833-dev.twil.io", "https://video-app-2718-dev.twil.io/", "https://video-app-6927-dev.twil.io/"
 ]
 
 # CORS_ORIGIN_REGEX_WHITELIST = [

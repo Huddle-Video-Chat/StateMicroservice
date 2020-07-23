@@ -141,6 +141,8 @@ def sendMessage(request):
 
     rds.Room.add_message(id, username, body)
 
+    return Response("Sent")
+
 @api_view(['GET']) 
 @check_params(['id'])
 def getMessages(request):

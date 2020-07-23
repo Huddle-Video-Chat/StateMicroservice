@@ -1,5 +1,6 @@
 import os
 import redis
+import pickle
 
 # class RedisClient(redis.Redis):
 #     def __init__(self):
@@ -82,7 +83,6 @@ class Room():
             Huddle.create(id, huddle_id, huddle_data) # creates huddle dict
             rc.lpush(Room.get_huddle_list_key(id), huddle_id) # add huddle id to room's huddles list
 
-
             return huddle_id
 
     def delete_huddle(id, huddle_id):
@@ -91,7 +91,8 @@ class Room():
 
     def add_message(id, username, body):
         if Room.exists(id):
-            rc.lpush(Room.get_messages_list_key(id), str({"username": username, "body": body})) # add message to room's messages list
+            print(Room.get_messages_list_key(id))
+            rc.lpush(Room.get_messages_list_key(id), pickle.dumps({"username": username, "body": body})) # add message to room's messages list
 
     def delete(id):
         if Room.exists(id):
@@ -118,7 +119,8 @@ class Room():
         return get_list(Room.get_user_list_key(id))
 
     def list_messages(id):
-        return get_list(Room.get_messages_list_key(id))
+        return [pickle.loads(msg) for msg in get_list(Room.get_messages_list_key(id))]
+        # return get_list(Room.get_messages_list_key(id))
 
     def get_next_huddle_id(id):
         val = int(rc.hget(Room.get_key(id), "HUDDLECOUNTER")) + 1

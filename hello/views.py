@@ -140,13 +140,15 @@ def sendMessage(request):
     body = helpers.getQueryValue(request, 'body')
 
     rds.Room.add_message(id, username, body)
-
+    
     return Response("Sent")
 
 @api_view(['GET']) 
 @check_params(['id'])
 def getMessages(request):
-    return Response(rds.Room.list_messages(id))
+    id = helpers.getQueryValue(request, 'id')
+    messages = rds.Room.list_messages(id)
+    return Response(messages)
 
 @api_view(['DELETE'])
 def clear(request):

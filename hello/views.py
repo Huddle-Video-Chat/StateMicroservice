@@ -146,7 +146,7 @@ def sendMessage(request):
 @api_view(['GET']) 
 @check_params(['id'])
 def getMessages(request):
-    return rds.Room.list_messages(id)
+    return Response(rds.Room.list_messages(id))
 
 @api_view(['DELETE'])
 def clear(request):

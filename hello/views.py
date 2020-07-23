@@ -138,7 +138,7 @@ def sendMessage(request):
     id = helpers.getQueryValue(request, 'id')
     user_id = helpers.getQueryValue(request, 'user_id')
     body = helpers.getQueryValue(request, 'body')
-    return rds.User.get(id, user_id)
+    return str(rds.User.get(id, user_id))
     # username = rds.User.get(id, user_id)['username']
 
     # rds.Room.add_message(id, username, body)

@@ -117,7 +117,7 @@ class Room():
     def list_users(id):
         return get_list(Room.get_user_list_key(id))
 
-     def list_messages(id):
+    def list_messages(id):
         return get_list(Room.get_messages_list_key(id))
 
     def get_next_huddle_id(id):

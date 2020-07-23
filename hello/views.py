@@ -133,15 +133,13 @@ def getStateJson(id, user_id):
     return response
 
 @api_view(['POST']) 
-@check_params(['id', 'user_id', 'body'])
+@check_params(['id', 'username', 'body'])
 def sendMessage(request):
     id = helpers.getQueryValue(request, 'id')
-    user_id = helpers.getQueryValue(request, 'user_id')
+    username = helpers.getQueryValue(request, 'username')
     body = helpers.getQueryValue(request, 'body')
-    return Response(str(rds.User.get(id, user_id)))
-    # username = rds.User.get(id, user_id)['username']
 
-    # rds.Room.add_message(id, username, body)
+    rds.Room.add_message(id, username, body)
 
 @api_view(['GET']) 
 @check_params(['id'])

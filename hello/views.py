@@ -132,6 +132,21 @@ def getStateJson(id, user_id):
 
     return response
 
+@api_view(['POST']) 
+@check_params(['id', 'user_id', 'body'])
+def sendMessage(request):
+    id = helpers.getQueryValue(request, 'id')
+    user_id = helpers.getQueryValue(request, 'user_id')
+    body = helpers.getQueryValue(request, 'body')
+    username = rds.User.get(id, user_id)['username']
+
+    rds.Room.add_message(id, username, body)
+
+@api_view(['POST']) 
+@check_params(['id', 'user_id', 'body'])
+def getMessages(request):
+    return rds.Room.list_messages(id)
+
 @api_view(['DELETE'])
 def clear(request):
     rds.reset()

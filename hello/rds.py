@@ -35,6 +35,9 @@ class Room():
     def get_room_list_key():
         return 'LISTROOMS'
 
+    def get_messages_list_key(id):
+        return 'LISTROOMMESSAGES_' + str(id)
+
     def exists(id):
         return rc.exists(Room.get_key(id))
 
@@ -86,6 +89,10 @@ class Room():
         rc.lrem(Room.get_huddle_list_key(id), 1, huddle_id) # delete huddle from huddles list
         Huddle.delete(id, huddle_id) # delete huddle dict
 
+    def add_message(id, username, body):
+        if Room.exists(id):
+            rc.lpush(Room.get_messages_list_key(id), str({"username": username, "body": body})) # add message to room's messages list
+
     def delete(id):
         if Room.exists(id):
             key = Room.get_key(id)
@@ -109,6 +116,9 @@ class Room():
 
     def list_users(id):
         return get_list(Room.get_user_list_key(id))
+
+     def list_messages(id):
+        return get_list(Room.get_messages_list_key(id))
 
     def get_next_huddle_id(id):
         val = int(rc.hget(Room.get_key(id), "HUDDLECOUNTER")) + 1

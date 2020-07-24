@@ -1,5 +1,6 @@
 import os
 import redis
+import pickle
 
 # class RedisClient(redis.Redis):
 #     def __init__(self):
@@ -35,6 +36,9 @@ class Room():
     def get_room_list_key():
         return 'LISTROOMS'
 
+    def get_messages_list_key(id):
+        return 'LISTROOMMESSAGES_' + str(id)
+
     def exists(id):
         return rc.exists(Room.get_key(id))
 
@@ -46,8 +50,17 @@ class Room():
         rc.hmset(key, data) # creates room dict
 
         rc.hmset(key, {"HUDDLECOUNTER": 0})
+        rc.hmset(key, {"STATECOUNTER": 0})
 
         return id
+
+    def updateStateCounter(id):
+        val = int(rc.hget(Room.get_key(id), "STATECOUNTER")) + 1
+        rc.hmset(Room.get_key(id), {"STATECOUNTER": val})
+        return val  
+
+    def getStateCounter(id):
+        return int(rc.hget(Room.get_key(id), "STATECOUNTER"))
 
     def add_user(id, user_id, user_data):
         if Room.exists(id):
@@ -55,6 +68,7 @@ class Room():
             User.create(id, user_id, user_data) # creates user dict
             rc.lpush(Room.get_user_list_key(id), user_id) # add user id to room's users list
             return user_id
+            
 
     def delete_user(id, user_id, huddle_id):
         if Room.exists(id):
@@ -62,16 +76,23 @@ class Room():
             User.delete(id, user_id) # delete user dict
             Huddle.delete_user(id, huddle_id, user_id)
 
+
     def add_huddle(id, huddle_data):
         if Room.exists(id):
             huddle_id = Room.get_next_huddle_id(id)
             Huddle.create(id, huddle_id, huddle_data) # creates huddle dict
             rc.lpush(Room.get_huddle_list_key(id), huddle_id) # add huddle id to room's huddles list
+
             return huddle_id
 
     def delete_huddle(id, huddle_id):
         rc.lrem(Room.get_huddle_list_key(id), 1, huddle_id) # delete huddle from huddles list
         Huddle.delete(id, huddle_id) # delete huddle dict
+
+    def add_message(id, username, body):
+        if Room.exists(id):
+            print(Room.get_messages_list_key(id))
+            rc.lpush(Room.get_messages_list_key(id), pickle.dumps({"username": username, "body": body})) # add message to room's messages list
 
     def delete(id):
         if Room.exists(id):
@@ -96,6 +117,10 @@ class Room():
 
     def list_users(id):
         return get_list(Room.get_user_list_key(id))
+
+    def list_messages(id):
+        return [pickle.loads(msg) for msg in get_list(Room.get_messages_list_key(id))]
+        # return get_list(Room.get_messages_list_key(id))
 
     def get_next_huddle_id(id):
         val = int(rc.hget(Room.get_key(id), "HUDDLECOUNTER")) + 1

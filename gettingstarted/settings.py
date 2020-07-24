@@ -56,7 +56,11 @@ MIDDLEWARE = [
 ]
 
 CORS_ORIGIN_WHITELIST = [
+<<<<<<< HEAD
     "http://localhost:3000", "https://video-app-6833-dev.twil.io", "https://video-app-2718-dev.twil.io/", "https://video-app-8505-dev.twil.io/","https://video-app-8366-dev.twil.io/"
+=======
+    "http://localhost:3000", "https://video-app-6833-dev.twil.io", "https://video-app-2718-dev.twil.io", "https://video-app-2027-dev.twil.io"
+>>>>>>> 67b371fd8c9b4ad5ea85a76c863d896162fa0f91
 ]
 
 # CORS_ORIGIN_REGEX_WHITELIST = [

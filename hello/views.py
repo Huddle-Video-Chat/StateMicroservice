@@ -140,8 +140,9 @@ def sendMessage(request):
     body = helpers.getQueryValue(request, 'body')
 
     rds.Room.add_message(id, username, body)
+    messages = rds.Room.list_messages(id)
     
-    return Response("Sent")
+    return Response(messages)
 
 @api_view(['GET']) 
 @check_params(['id'])

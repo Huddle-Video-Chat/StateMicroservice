@@ -55,9 +55,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
 ]
 
-CORS_ORIGIN_WHITELIST = [
-    "http://localhost:3000", "https://video-app-9991-dev.twil.io", "https://video-app-6833-dev.twil.io"
-]
+CORS_ORIGIN_WHITELIST = ALLOWED_HOSTS
 
 # CORS_ORIGIN_REGEX_WHITELIST = [
 #     r"^https://\w+\.twil\.io$",

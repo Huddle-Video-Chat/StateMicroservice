@@ -29,7 +29,7 @@ DEBUG = True
 
 # DO NOT REMOVE LAST ONE [2378]
 ALLOWED_HOSTS = ["http://localhost:3000", "https://video-app-2372-dev.twil.io/","https://video-app-6833-dev.twil.io", "https://video-app-9123-dev.twil.io?passcode=6255939123",
-"https://video-app-2378-dev.twil.io?passcode=9973962378"]
+"https://video-app-2378-dev.twil.io?passcode=9973962378", "https://video-app-4405-dev.twil.io?passcode=3919454405"]
 
 
 # Application definition

@@ -41,7 +41,7 @@ def joinRoom(request):
     # huddle_id = rds.Room.get_zeroth_huddle(id)
     # rds.Huddle.add_user(id, huddle_id, user_id)
 
-        rds.Room.updateStateCounter(id)
+    rds.Room.updateStateCounter(id)
 
     return Response(getStateJson(id, user_id))
 

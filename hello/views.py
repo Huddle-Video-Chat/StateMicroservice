@@ -3,7 +3,7 @@ from django.shortcuts import render
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from . import rds
+from . import rdsfixed as rds
 from .helpers import check_params
 from . import helpers
 
@@ -24,22 +24,21 @@ def roomExists(request):
     return Response(r)
 
 @api_view(['POST']) 
-@check_params(['id', 'user_id', 'username', 'first', 'last'])
+@check_params(['id', 'user_id'])
 def joinRoom(request):
     id = helpers.getQueryValue(request, 'id')
-    user_data = helpers.getQueryDict(request, keys=['username', 'first', 'last'])
     user_id = helpers.getQueryValue(request, 'user_id')
 
     if not rds.Room.exists(id):
         rds.Room.create(id, {'name': 'default'})
 
-    rds.Room.add_user(id, user_id, user_data)
+    rds.Room.add_user_to_huddle(id, user_id, rds.Room.get_zeroth_huddle(id))
 
-    if rds.Room.num_huddles(id) == 0:
-        rds.Room.add_huddle(id, {'id': id})
+    # if rds.Room.num_huddles(id) == 0:
+    #     rds.Room.add_huddle(id, {'id': id})
 
-    huddle_id = rds.Room.get_zeroth_huddle(id)
-    rds.Huddle.add_user(id, huddle_id, user_id)
+    # huddle_id = rds.Room.get_zeroth_huddle(id)
+    # rds.Huddle.add_user(id, huddle_id, user_id)
 
     rds.Room.updateStateCounter(id)
 
@@ -50,16 +49,14 @@ def joinRoom(request):
 def leaveRoom(request):
     id = helpers.getQueryValue(request, 'id')
     user_id = helpers.getQueryValue(request, 'user_id')
-    huddle_id = rds.User.get_huddle(id, user_id)
 
     rds.Room.delete_user(
         id, 
         user_id,
-        huddle_id
     )
 
-    if rds.Huddle.num_users(id, huddle_id) == 0:
-        rds.Room.delete_huddle(id, huddle_id)
+    # if rds.Huddle.num_users(id, huddle_id) == 0:
+    #     rds.Room.delete_huddle(id, huddle_id)
 
     if rds.Room.num_users(id) == 0:
         rds.Room.delete(id)
@@ -75,13 +72,15 @@ def joinHuddle(request):
     id = helpers.getQueryValue(request, 'id')
     new_huddle_id = helpers.getQueryValue(request, 'new_huddle_id')
     user_id = helpers.getQueryValue(request, 'user_id')
-    old_huddle_id = rds.User.get_huddle(id, user_id)
+    # old_huddle_id = rds.User.get_huddle(id, user_id)
 
-    rds.Huddle.delete_user(id, old_huddle_id, user_id)
-    rds.Huddle.add_user(id, new_huddle_id, user_id)
+    # rds.Huddle.delete_user(id, old_huddle_id, user_id)
+    # rds.Huddle.add_user(id, new_huddle_id, user_id)
 
-    if rds.Huddle.num_users(id, old_huddle_id) == 0:
-        rds.Room.delete_huddle(id, old_huddle_id)
+    rds.Room.add_user_to_huddle(id, user_id, new_huddle_id)
+
+    # if rds.Huddle.num_users(id, old_huddle_id) == 0:
+    #     rds.Room.delete_huddle(id, old_huddle_id)
 
     rds.Room.updateStateCounter(id)
 
@@ -92,14 +91,17 @@ def joinHuddle(request):
 def createHuddle(request):
     id = helpers.getQueryValue(request, 'id')
     user_id = helpers.getQueryValue(request, 'user_id')
-    old_huddle_id = rds.User.get_huddle(id, user_id)
 
-    rds.Huddle.delete_user(id, old_huddle_id, user_id)
-    new_huddle_id = rds.Room.add_huddle(id, {'id': id})
-    rds.Huddle.add_user(id, new_huddle_id, user_id)
+    rds.Room.add_user_to_new_huddle(id, user_id)
 
-    if rds.Huddle.num_users(id, old_huddle_id) == 0:
-        rds.Room.delete_huddle(id, old_huddle_id)
+    # old_huddle_id = rds.User.get_huddle(id, user_id)
+
+    # rds.Huddle.delete_user(id, old_huddle_id, user_id)
+    # new_huddle_id = rds.Room.add_huddle(id, {'id': id})
+    # rds.Huddle.add_user(id, new_huddle_id, user_id)
+
+    # if rds.Huddle.num_users(id, old_huddle_id) == 0:
+    #     rds.Room.delete_huddle(id, old_huddle_id)
 
     rds.Room.updateStateCounter(id)
 
@@ -117,20 +119,31 @@ def getStateJson(id, user_id):
         "state_counter": rds.Room.getStateCounter(id),
         "id": id,
         "user_id": user_id,
-        "huddle_id": int(rds.User.get_huddle(id, user_id)),
+        # "huddle_id": int(rds.User.get_huddle(id, user_id)),
         "users": {}, # [u for u in rds.Room.list_users(id)],
-        "rooms": []
+        # "rooms": []
     }
-    for huddle_id in rds.Room.list_huddles(id):
-        huddle_id = int(huddle_id)
-        users = [u for u in rds.Huddle.list_users(id, huddle_id)]
 
-        for u in rds.Huddle.list_users(id, huddle_id):
-            response['users'][u.decode("utf-8") ] = huddle_id
+    _map = rds.Room.get_map(id)
 
-        response['rooms'] += [{"id" : huddle_id, "users": users}]
+    for k in _map.keys():
+        response['users'][k.decode("utf-8")] = int(_map[k])
+
+
+    response['huddle_id'] = response['users'][user_id]
+
+    # for huddle_id in rds.Room.list_huddles(id):
+    #     huddle_id = int(huddle_id)
+    #     users = [u for u in rds.Huddle.list_users(id, huddle_id)]
+
+    #     for u in rds.Huddle.list_users(id, huddle_id):
+    #         response['users'][u.decode("utf-8") ] = huddle_id
+
+    #     response['rooms'] += [{"id" : huddle_id, "users": users}]
 
     return response
+
+    # return str(rds.Room.get_map(id))
 
 @api_view(['POST']) 
 @check_params(['id', 'username', 'body'])

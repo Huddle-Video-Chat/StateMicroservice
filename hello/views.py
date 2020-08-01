@@ -29,6 +29,7 @@ def joinRoom(request):
     id = helpers.getQueryValue(request, 'id')
     user_id = helpers.getQueryValue(request, 'user_id')
 
+    # if not rds.User.exists(id, user_id):
     if not rds.Room.exists(id):
         rds.Room.create(id, {'name': 'default'})
 
@@ -40,7 +41,7 @@ def joinRoom(request):
     # huddle_id = rds.Room.get_zeroth_huddle(id)
     # rds.Huddle.add_user(id, huddle_id, user_id)
 
-    rds.Room.updateStateCounter(id)
+        rds.Room.updateStateCounter(id)
 
     return Response(getStateJson(id, user_id))
 

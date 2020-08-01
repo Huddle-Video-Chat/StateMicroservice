@@ -98,6 +98,8 @@ class Room():
         if len(_map.keys()) > 0:
             key = list(_map.keys())[0]
             return int(_map[key])
+        else:
+            return Room.get_next_huddle_id(id)
 
     def get(id):
         return rc.hgetall(Room.get_key(id))

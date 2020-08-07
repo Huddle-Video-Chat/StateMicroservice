@@ -28,7 +28,7 @@ SECRET_KEY = "CHANGE_ME!!!! (P.S. the SECRET_KEY environment variable will be us
 DEBUG = True
 
 ALLOWED_HOSTS = ["http://localhost:3000", "https://video-app-9991-dev.twil.io","https://video-app-6833-dev.twil.io", "https://video-app-3514-dev.twil.io",
-"https://video-app-3409-dev.twil.io?passcode=3689813409", "https://video-app-2115-dev.twil.io?passcode=4161122115"]
+"https://video-app-3409-dev.twil.io?passcode=3689813409", "https://video-app-6114-dev.twil.io?passcode=3141326114"]
 # Application definition
 
 INSTALLED_APPS = [

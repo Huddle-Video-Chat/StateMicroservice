@@ -18,7 +18,7 @@ def reset():
     rc.flushdb()
 
 class Room():
-    def get_key(id):
+    def get_key(id: int) -> str:
         return 'ROOM_' + str(id)
 
     def get_map_key(id):
@@ -27,17 +27,17 @@ class Room():
     def get_bots_key(id):
         return 'BOTS_' + str(id)
 
-    def get_messages_list_key(id):
+    def get_messages_list_key(id: int) -> str:
         return 'LISTROOMMESSAGES_' + str(id)
 
-    def get_room_list_key():
+    def get_room_list_key() -> str:
         return 'LISTROOMS'
 
-    def exists(id):
+    def exists(id: int) -> str:
         return rc.exists(Room.get_key(id))
 
-    def create(id, data):
-        key = Room.get_key(id)
+    def create(id: int, data) -> int:
+        key: str = Room.get_key(id)
         rc.lpush(Room.get_room_list_key(), id) # adds room id to rooms list
         rc.hmset(key, data) # creates room dict
 

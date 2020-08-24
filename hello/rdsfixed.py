@@ -22,7 +22,10 @@ class Room():
         return 'ROOM_' + str(id)
 
     def get_map_key(id):
-        return 'MAPROOM_' + str(id) 
+        return 'MAP_' + str(id) 
+    
+    def get_bots_key(id):
+        return 'BOTS_' + str(id)
 
     def get_messages_list_key(id):
         return 'LISTROOMMESSAGES_' + str(id)
@@ -63,6 +66,18 @@ class Room():
         if Room.exists(id):
             rc.hdel(Room.get_map_key(id), user_id)
 
+    def set_bot(id, huddle_id, url):
+        if Room.exists(id):
+            rc.hmset(Room.get_bots_key(id), {huddle_id: url})
+
+    def get_bot(id, huddle_id):
+        if Room.exists(id):
+            return rc.hget(Room.get_bots_key(id), huddle_id)
+        
+    def delete_bot(id, huddle_id):
+        if Room.exists(id):
+            rc.hdel(Room.get_bots_key(id), huddle_id)
+
     def delete(id):
         if Room.exists(id):
             rc.lrem(Room.get_room_list_key(), 1, id) # deletes room from list 
@@ -74,6 +89,10 @@ class Room():
             map_key = Room.get_map_key(id)
             all_keys = list(rc.hgetall(map_key).keys()) 
             rc.hdel(map_key, *all_keys) # deletes dict
+
+            bots_key = Room.get_bots_key(id)
+            all_keys = list(rc.hgetall(bots_key).keys()) 
+            rc.hdel(bots_key, *all_keys) # deletes dict
 
     def list():
         return get_list(Room.get_room_list_key())

@@ -5,6 +5,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 import hello.views
+import hello.bots
 
 # To add a new path, first import the app:
 # import blog
@@ -35,6 +36,8 @@ urlpatterns = [
 
     path('messages/send', hello.views.sendMessage),
     path('messages/get', hello.views.getMessages),
+
+    path('bots/codenames', hello.bots.codenames),
 
     path('clear', hello.views.clear),
 ]

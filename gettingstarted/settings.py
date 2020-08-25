@@ -28,7 +28,7 @@ SECRET_KEY = "CHANGE_ME!!!! (P.S. the SECRET_KEY environment variable will be us
 DEBUG = True
 
 ALBERT_WHITELIST="https://video-app-3601-9145-dev.twil.io"
-VICKY_WHITELIST="https://video-app-0627-7119-dev.twil.io"
+VICKY_WHITELIST="https://video-app-8466-4978-dev.twil.io"
 ARMAAN_WHITELIST=""
 
 ALLOWED_HOSTS=["http://localhost:3000" , ALBERT_WHITELIST, VICKY_WHITELIST, ARMAAN_WHITELIST]

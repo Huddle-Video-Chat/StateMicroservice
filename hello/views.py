@@ -130,8 +130,9 @@ def getStateJson(id, user_id):
     for k in _map.keys():
         response['users'][k.decode("utf-8")] = int(_map[k])
 
-
-    response['huddle_id'] = response['users'][user_id]
+    huddle_id = response['users'][user_id]
+    response['huddle_id'] = huddle_id
+    response['bot_url'] = rds.Room.get_bot(id, huddle_id)
 
     # for huddle_id in rds.Room.list_huddles(id):
     #     huddle_id = int(huddle_id)

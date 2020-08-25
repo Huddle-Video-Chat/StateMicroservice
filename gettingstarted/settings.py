@@ -37,7 +37,7 @@ ALBERT_WHITELIST="https://video-app-3425-8882-dev.twil.io?passcode=5743703425888
 =======
 ALBERT_WHITELIST="https://video-app-7512-4937-dev.twil.io?passcode=08194475124937"
 >>>>>>> 4b5dd558078b2a7b31a26629a00f92a6eef08d27
-VICKY_WHITELIST="https://video-app-0627-7119-dev.twil.io"
+VICKY_WHITELIST="https://video-app-8466-4978-dev.twil.io"
 ARMAAN_WHITELIST="https://video-app-3514-dev.twil.io?passcode=3874723514"
 >>>>>>> 876ed87f04e2a24e13f68ceea82bda52679d4932
 

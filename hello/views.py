@@ -183,6 +183,7 @@ def addCodenames(request):
 
     url = "https://www.horsepaste.com/" + str(hash(datetime.now()))
     rds.Room.set_bot(id, huddle_id, url)
+    rds.Room.updateStateCounter(id)
     return Response(getStateJson(id, user_id))
 
 @api_view(['DELETE']) 
@@ -193,4 +194,5 @@ def deleteBot(request):
     huddle_id = helpers.getQueryValue(request, 'huddle_id')
 
     rds.Room.delete_bot(id, huddle_id)
+    rds.Room.updateStateCounter(id)
     return Response(getStateJson(id, user_id))

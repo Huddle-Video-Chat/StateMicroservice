@@ -7,6 +7,8 @@ from . import rdsfixed as rds
 from .helpers import check_params
 from . import helpers
 
+from datetime import datetime
+
 @api_view(['GET']) 
 def ping(request):
     return Response("Hello World!")
@@ -170,3 +172,27 @@ def getMessages(request):
 def clear(request):
     rds.reset()
     return Response("Cleared database")
+
+
+@api_view(['POST']) 
+@check_params(['id', 'huddle_id', 'user_id'])
+def addCodenames(request):
+    id = helpers.getQueryValue(request, 'id')
+    user_id = helpers.getQueryValue(request, 'user_id')
+    huddle_id = helpers.getQueryValue(request, 'huddle_id')
+
+    url = "https://www.horsepaste.com/" + str(hash(datetime.now()))
+    rds.Room.set_bot(id, huddle_id, url)
+    rds.Room.updateStateCounter(id)
+    return Response(getStateJson(id, user_id))
+
+@api_view(['DELETE']) 
+@check_params(['id', 'huddle_id', 'user_id'])
+def deleteBot(request):
+    id = helpers.getQueryValue(request, 'id')
+    user_id = helpers.getQueryValue(request, 'user_id')
+    huddle_id = helpers.getQueryValue(request, 'huddle_id')
+
+    rds.Room.delete_bot(id, huddle_id)
+    rds.Room.updateStateCounter(id)
+    return Response(getStateJson(id, user_id))

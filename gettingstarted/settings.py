@@ -29,7 +29,7 @@ DEBUG = True
 
 #TODO removed whitelist
 ALBERT_WHITELIST="https://video-app-7512-4937-dev.twil.io"
-VICKY_WHITELIST="https://video-app-0627-7119-dev.twil.io"
+VICKY_WHITELIST="https://video-app-6388-6305-dev.twil.io"
 ARMAAN_WHITELIST="https://video-app-3514-dev.twil.io"
 DEV_WHITELIST="https://video-app-4467-8374-dev.twil.io"
 

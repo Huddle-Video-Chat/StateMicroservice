@@ -30,7 +30,7 @@ DEBUG = True
 ALBERT_WHITELIST="https://video-app-6204-4959-dev.twil.io"
 VICKY_WHITELIST="https://video-app-0627-7119-dev.twil.io"
 ARMAAN_WHITELIST="https://video-app-3514-dev.twil.io"
-DEV_WHITELIST="https://video-app-4790-1334-dev.twil.io?passcode=68646547901334"
+DEV_WHITELIST="https://video-app-4790-1334-dev.twil.io"
 
 ALLOWED_HOSTS=["http://localhost:3000" , ALBERT_WHITELIST, VICKY_WHITELIST, ARMAAN_WHITELIST, DEV_WHITELIST]
 # Application definition

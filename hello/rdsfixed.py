@@ -93,7 +93,6 @@ class Room():
         :param data: dict containing metadata for the room.
         :return: str id of the room
         """
-        Room.verify_room(id)
         key: str = Room.get_key(id)
         rc.lpush(Room.get_room_list_key(), id) # adds room id to rooms list
         rc.hmset(key, data) # creates room dict

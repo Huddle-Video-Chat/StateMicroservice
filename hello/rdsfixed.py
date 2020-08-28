@@ -45,13 +45,17 @@ class Room():
         """
         return 'ROOM_' + str(id)
 
-    def get_map_key(id: str) -> str:
+
+    def get_map_key(id):
         """
         Gets the key used in redis for a room's map of users to huddle
         :param id: id of the desired room
         :return: str key
         """
-        return 'MAPROOM_' + str(id) 
+        return 'MAP_' + str(id) 
+    
+    def get_bots_key(id):
+        return 'BOTS_' + str(id)
 
     def get_messages_list_key(id: str) -> str:
         """
@@ -75,7 +79,6 @@ class Room():
         :param id: id of the desired room
         :return: 1 if room exists, 0 if it does not
         """
-        Room.verify_room(id)
         return rc.exists(Room.get_key(id))
 
     def create(id: str, data: Dict) -> str:
@@ -162,7 +165,6 @@ class Room():
         """
         Room.verify_room(id)
         rc.lrem(Room.get_room_list_key(), 1, id) # deletes room from list
-
         key: str = Room.get_key(id)
         all_keys: List = list(rc.hgetall(key).keys())
         rc.hdel(key, *all_keys) # deletes dict
@@ -171,12 +173,30 @@ class Room():
         all_keys: List = list(rc.hgetall(map_key).keys())
         rc.hdel(map_key, *all_keys) # deletes dict
 
+        bots_key: str = Room.get_bots_key(id)
+        all_keys: List = list(rc.hgetall(bots_key).keys())
+        rc.hdel(bots_key, *all_keys)  # deletes dict
+
     def list() -> List:
         """
         Get the room list, containing the keys to every room.
         :return: list of all room ids
         """
         return get_list(Room.get_room_list_key())
+
+    def set_bot(id, huddle_id, url):
+        if Room.exists(id):
+            rc.hmset(Room.get_bots_key(id), {huddle_id: url})
+
+
+    def get_bot(id, huddle_id):
+        if Room.exists(id):
+            return rc.hget(Room.get_bots_key(id), huddle_id)
+
+
+    def delete_bot(id, huddle_id):
+        if Room.exists(id):
+            rc.hdel(Room.get_bots_key(id), huddle_id)
 
     def add_message(id: str, username: str, body: str) -> None:
         """

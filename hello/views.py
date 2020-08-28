@@ -9,6 +9,8 @@ from . import rdsfixed as rds
 from .helpers import check_params
 from . import helpers
 
+from datetime import datetime
+
 @api_view(['GET']) 
 def ping(request: Request) -> Response:
     return Response("Hello World!")
@@ -210,12 +212,63 @@ def getStateJson(id: str, user_id: str) -> Dict:
         "user_id": user_id,
         "users": {},
     }
-
     room_state: Dict = rds.Room.get_map(id)
 
     for k in room_state.keys():
         response['users'][k.decode("utf-8")] = int(room_state[k])
 
-    response['huddle_id'] = response['users'][user_id]
+    huddle_id = response['users'][user_id]
+    response['huddle_id'] = huddle_id
+    response['bot_url'] = rds.Room.get_bot(id, huddle_id)
+
     return response
 
+    # return str(rds.Room.get_map(id))
+
+@api_view(['POST']) 
+@check_params(['id', 'username', 'body'])
+def sendMessage(request):
+    id = helpers.getQueryValue(request, 'id')
+    username = helpers.getQueryValue(request, 'username')
+    body = helpers.getQueryValue(request, 'body')
+
+    rds.Room.add_message(id, username, body)
+    messages = rds.Room.list_messages(id)
+    
+    return Response(messages)
+
+@api_view(['GET']) 
+@check_params(['id'])
+def getMessages(request):
+    id = helpers.getQueryValue(request, 'id')
+    messages = rds.Room.list_messages(id)
+    return Response(messages)
+
+@api_view(['DELETE'])
+def clear(request):
+    rds.reset()
+    return Response("Cleared database")
+
+
+@api_view(['POST']) 
+@check_params(['id', 'huddle_id', 'user_id'])
+def addCodenames(request):
+    id = helpers.getQueryValue(request, 'id')
+    user_id = helpers.getQueryValue(request, 'user_id')
+    huddle_id = helpers.getQueryValue(request, 'huddle_id')
+
+    url = "https://www.horsepaste.com/" + str(hash(datetime.now()))
+    rds.Room.set_bot(id, huddle_id, url)
+    rds.Room.updateStateCounter(id)
+    return Response(getStateJson(id, user_id))
+
+@api_view(['DELETE']) 
+@check_params(['id', 'huddle_id', 'user_id'])
+def deleteBot(request):
+    id = helpers.getQueryValue(request, 'id')
+    user_id = helpers.getQueryValue(request, 'user_id')
+    huddle_id = helpers.getQueryValue(request, 'huddle_id')
+
+    rds.Room.delete_bot(id, huddle_id)
+    rds.Room.updateStateCounter(id)
+    return Response(getStateJson(id, user_id))

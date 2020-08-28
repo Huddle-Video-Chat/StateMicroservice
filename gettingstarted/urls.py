@@ -36,5 +36,9 @@ urlpatterns = [
     path('messages/send', hello.views.sendMessage),
     path('messages/get', hello.views.getMessages),
 
+    path('bots/codenames', hello.views.addCodenames),
+
+    path('bots/delete', hello.views.deleteBot),
+
     path('clear', hello.views.clear),
 ]

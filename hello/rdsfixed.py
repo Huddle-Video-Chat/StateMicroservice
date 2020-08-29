@@ -73,6 +73,42 @@ class Room():
         """
         return 'LISTROOMS'
 
+    def get_named_huddles_key(id: str) -> str:
+        """
+        Gets the key used for map of named huddles in a room
+        :param id: id of the desired room
+        :return: str key
+        """
+        return 'NAMEDHUDDLES_' + str(id)
+
+    def get_named_huddles_map(id: str) -> Dict:
+        """
+        Gets the map of named huddles in a room
+        :param id: id of the desired room
+        :return: map of the named huddles
+        """
+        return rc.hgetall('NAMEDHUDDLES_' + str(id))
+
+    def add_named_huddle(id: str, huddle_id: int, name: str) -> None:
+        """
+        Marks an existing huddle in the room as named. The huddle may or may not contain people.
+        :param id: id of the room
+        :param huddle_id: id of the huddle
+        :param name: name given to the huddle
+        """
+        rc.hmset(Room.get_named_huddles_key(id), {huddle_id: name})
+
+    def removed_huddle_name(id: str, huddle_id: int) -> None:
+        """
+        Marks a named huddle as unnamed.
+        :param id: id of the room
+        :param huddle_id: id of the huddle
+        """
+        if rc.hget(Room.get_named_huddles_key(id), huddle_id):
+            rc.hdel(Room.get_named_huddles_key(id), huddle_id)
+        else:
+            raise Exception("Huddle: " + str(huddle_id) + " is not named")
+
     def exists(id: str) -> int:
         """
         Checks whether a room exists in the database.
@@ -96,7 +132,6 @@ class Room():
         key: str = Room.get_key(id)
         rc.lpush(Room.get_room_list_key(), id) # adds room id to rooms list
         rc.hmset(key, data) # creates room dict
-
         rc.hmset(key, {"HUDDLECOUNTER": 0})
         rc.hmset(key, {"STATECOUNTER": 0})
         #FIXME maybe return room state for consistency?

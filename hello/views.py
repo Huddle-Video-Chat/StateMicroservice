@@ -89,7 +89,6 @@ def leaveRoom(request: Request) -> Response:
     rds.Room.updateStateCounter(room_id)
     return Response(True)
 
-
 @api_view(['POST']) 
 @check_params(['id', 'user_id', 'new_huddle_id'])
 def joinHuddle(request: Request) -> Response:
@@ -142,7 +141,6 @@ def state(request: Request) -> Response:
     room_id: str = helpers.getQueryValue(request, 'id')
     user_id: str = helpers.getQueryValue(request, 'user_id')
     return Response(getStateJson(room_id, user_id))
-
 
 @api_view(['POST'])
 @check_params(['id', 'username', 'body'])
@@ -211,6 +209,7 @@ def getStateJson(id: str, user_id: str) -> Dict:
         "id": id,
         "user_id": user_id,
         "users": {},
+        "named_huddles": {}
     }
     room_state: Dict = rds.Room.get_map(id)
 
@@ -221,6 +220,9 @@ def getStateJson(id: str, user_id: str) -> Dict:
     response['huddle_id'] = huddle_id
     response['bot_url'] = rds.Room.get_bot(id, huddle_id)
 
+    huddle_names: Dict = rds.Room.get_named_huddles_map(id)
+    for k in huddle_names.keys():
+        response['named_huddles'][k.decode("utf-8")] = huddle_names[k].decode("utf-8")
     return response
 
     # return str(rds.Room.get_map(id))
@@ -270,3 +272,64 @@ def deleteBot(request):
     rds.Room.delete_bot(id, huddle_id)
     rds.Room.updateStateCounter(id)
     return Response(getStateJson(id, user_id))
+
+@api_view(['POST'])
+@check_params(['id', 'name'])
+def emptyHuddle(request) -> Response:
+    """
+    Creates a named empty huddle
+    :param request: contains the id of the room and name of the huddle
+    :return: map of the named huddles.
+    """
+    room_id: str = helpers.getQueryValue(request, 'id')
+    name: str = helpers.getQueryValue(request, 'name')
+
+    huddle_id = rds.Room.get_next_huddle_id(room_id);
+    rds.Room.add_named_huddle(room_id, huddle_id, name)
+    rds.Room.updateStateCounter(room_id)
+    result:Dict = dict()
+    map:Dict = rds.Room.get_named_huddles_map(room_id)
+    for x in map:
+        result[x.decode('utf-8')] = map[x].decode('utf-8')
+    return Response(result)
+
+@api_view(['POST'])
+@check_params(['id', 'huddle_id', 'name'])
+def nameHuddle(request) -> Response:
+    """
+    Gives a name to a specific huddle id inside a room.
+    :param request: contains the id of the room
+    :return: map of the named huddles.
+    """
+    room_id: str = helpers.getQueryValue(request, 'id')
+    huddle_id: str = helpers.getQueryValue(request, 'huddle_id')
+    name: str = helpers.getQueryValue(request, 'name')
+
+    rds.Room.add_named_huddle(room_id, huddle_id, name)
+    rds.Room.updateStateCounter(room_id)
+    result:Dict = dict()
+    map:Dict = rds.Room.get_named_huddles_map(room_id)
+    for x in map:
+        result[x.decode('utf-8')] = map[x].decode('utf-8')
+    return Response(result)
+
+@api_view(['POST'])
+@check_params(['id', 'huddle_id'])
+def unnameHuddle(request) -> Response:
+    """
+    Given a select huddle inside a room, get rid of its name
+    :param request: contains the id of the room and huddle
+    :return: map of the named huddles.
+    """
+    room_id: str = helpers.getQueryValue(request, 'id')
+    huddle_id: str = helpers.getQueryValue(request, 'huddle_id')
+
+    rds.Room.removed_huddle_name(room_id, huddle_id)
+    rds.Room.updateStateCounter(room_id)
+    result:Dict = dict()
+    map:Dict = rds.Room.get_named_huddles_map(room_id)
+    for x in map:
+        result[x.decode('utf-8')] = map[x].decode('utf-8')
+    return Response(result)
+
+

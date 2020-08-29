@@ -32,6 +32,9 @@ urlpatterns = [
     path('huddle/join', hello.views.joinHuddle),
 
     path('huddle/create', hello.views.createHuddle),
+    path('huddle/name', hello.views.nameHuddle),
+    path('huddle/unname', hello.views.unnameHuddle),
+    path('huddle/empty', hello.views.emptyHuddle),
 
     path('messages/send', hello.views.sendMessage),
     path('messages/get', hello.views.getMessages),

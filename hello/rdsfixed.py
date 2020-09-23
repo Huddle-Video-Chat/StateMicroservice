@@ -227,8 +227,12 @@ class Room():
     def get_bot(id, huddle_id):
         if Room.exists(id):
             data = rc.hget(Room.get_bots_key(id), huddle_id)
-            name, url = data.split(',')
-            return name,url
+
+            if data is None:
+                return None, None
+            else: 
+                name, url = data.split(',')
+                return name,url
 
 
     def delete_bot(id, huddle_id):

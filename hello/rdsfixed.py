@@ -231,7 +231,7 @@ class Room():
             if data is None:
                 return None, None
             else: 
-                name, url = data.split(',')
+                name, url = data.decode("utf-8").split(',')
                 return name,url
 
 

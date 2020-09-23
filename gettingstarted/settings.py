@@ -27,10 +27,10 @@ SECRET_KEY = "CHANGE_ME!!!! (P.S. the SECRET_KEY environment variable will be us
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALBERT_WHITELIST="https://video-app-7502-9432-dev.twil.io?passcode=93891975029432"
-VICKY_WHITELIST="https://video-app-5526-9388-dev.twil.io"
+ALBERT_WHITELIST="https://video-app-1314-9146-dev.twil.io"
+VICKY_WHITELIST="https://video-app-8400-3684-dev.twil.io"
 ARMAAN_WHITELIST="https://video-app-3514-dev.twil.io"
-DEV_WHITELIST="https://video-app-5929-1385-dev.twil.io?passcode=33076559291385"
+DEV_WHITELIST="https://video-app-0123-5110-dev.twil.io"
 
 ALLOWED_HOSTS=["http://localhost:3000" , ALBERT_WHITELIST, VICKY_WHITELIST, ARMAAN_WHITELIST, DEV_WHITELIST]
 # Application definition

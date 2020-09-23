@@ -218,14 +218,17 @@ class Room():
         """
         return get_list(Room.get_room_list_key())
 
-    def set_bot(id, huddle_id, url):
+    def set_bot(id, huddle_id, name, url):
         if Room.exists(id):
-            rc.hmset(Room.get_bots_key(id), {huddle_id: url})
+            data = name + ',' + url
+            rc.hmset(Room.get_bots_key(id), {huddle_id: data})
 
 
     def get_bot(id, huddle_id):
         if Room.exists(id):
-            return rc.hget(Room.get_bots_key(id), huddle_id)
+            data = rc.hget(Room.get_bots_key(id), huddle_id)
+            name, url = data.split(',')
+            return name,url
 
 
     def delete_bot(id, huddle_id):

@@ -262,6 +262,17 @@ def addCodenames(request):
     rds.Room.updateStateCounter(id)
     return Response(getStateJson(id, user_id))
 
+@api_view(['POST']) 
+@check_params(['id', 'huddle_id', 'user_id'])
+def addDrawize(request):
+    id = helpers.getQueryValue(request, 'id')
+    user_id = helpers.getQueryValue(request, 'user_id')
+    huddle_id = helpers.getQueryValue(request, 'huddle_id')
+    url = "https://www.drawize.com/"
+    rds.Room.set_bot(id, huddle_id, url)
+    rds.Room.updateStateCounter(id)
+    return Response(getStateJson(id, user_id))
+
 @api_view(['DELETE']) 
 @check_params(['id', 'huddle_id', 'user_id'])
 def deleteBot(request):

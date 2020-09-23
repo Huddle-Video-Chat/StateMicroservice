@@ -10,6 +10,7 @@ from .helpers import check_params
 from . import helpers
 
 from datetime import datetime
+import sys
 
 @api_view(['GET']) 
 def ping(request: Request) -> Response:
@@ -282,7 +283,7 @@ def addJukebox(request):
     id = helpers.getQueryValue(request, 'id')
     user_id = helpers.getQueryValue(request, 'user_id')
     huddle_id = helpers.getQueryValue(request, 'huddle_id')
-    url = "https://jukebox.today/" + str(hash(datetime.now()))
+    url = "https://jukebox.today/" + str(hash(datetime.now()) % ((sys.maxsize + 1) * 2))
     rds.Room.set_bot(id, huddle_id, 'Jukebox', url)
     rds.Room.updateStateCounter(id)
     return Response(getStateJson(id, user_id))

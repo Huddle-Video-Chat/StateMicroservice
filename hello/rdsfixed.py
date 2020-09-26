@@ -191,6 +191,14 @@ class Room():
         Room.verify_room(id)
         rc.hdel(Room.get_map_key(id), user_id)
 
+    def has_user(id: str) -> bool:
+        """
+        returns if a room has users in it
+        :param id: str id of the room
+        """
+        Room.verify_room(id)
+        return rc.exists(Room.get_map_key(id))
+
     def delete(id: str) -> None:
         """
         Deletes a room from the database.
@@ -200,16 +208,13 @@ class Room():
         Room.verify_room(id)
         rc.lrem(Room.get_room_list_key(), 1, id) # deletes room from list
         key: str = Room.get_key(id)
-        all_keys: List = list(rc.hgetall(key).keys())
-        rc.hdel(key, *all_keys) # deletes dict
+        rc.delete(key)
 
         map_key: str = Room.get_map_key(id)
-        all_keys: List = list(rc.hgetall(map_key).keys())
-        rc.hdel(map_key, *all_keys) # deletes dict
+        rc.delete(map_key)
 
         bots_key: str = Room.get_bots_key(id)
-        all_keys: List = list(rc.hgetall(bots_key).keys())
-        rc.hdel(bots_key, *all_keys)  # deletes dict
+        rc.delete(bots_key)
 
     def list() -> List:
         """

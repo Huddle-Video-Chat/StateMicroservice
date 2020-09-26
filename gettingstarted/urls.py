@@ -40,6 +40,8 @@ urlpatterns = [
     path('messages/get', hello.views.getMessages),
 
     path('bots/codenames', hello.views.addCodenames),
+    path('bots/drawize', hello.views.addDrawize),
+    path('bots/jukebox', hello.views.addJukebox),
 
     path('bots/delete', hello.views.deleteBot),
 

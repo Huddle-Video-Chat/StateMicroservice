@@ -80,14 +80,10 @@ def leaveRoom(request: Request) -> Response:
     except Exception as m:
         helpers.throwHBasicError(m)
 
-    # TODO potentially change this when preserving rooms
-    if rds.Room.num_users(room_id) == 0:
-        try:
-            rds.Room.delete(room_id)
-        except Exception as m:
-            helpers.throwHBasicError(m)
-
-    rds.Room.updateStateCounter(room_id)
+    if not rds.Room.has_user(room_id):
+        rds.Room.delete(room_id)
+    else:
+        rds.Room.updateStateCounter(room_id)
     return Response(True)
 
 @api_view(['POST']) 
